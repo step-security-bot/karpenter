@@ -7,6 +7,9 @@ on:
   pull_request:
   schedule:
     - cron: '0 12 * * *'
+permissions:
+  contents: read
+
 jobs:
   analyze-go:
     name: Analyze Go
@@ -15,6 +18,11 @@ jobs:
       actions: read # github/codeql-action/init@v2
       security-events: write # github/codeql-action/init@v2
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@eb238b55efaa70779f274895e782ed17c84f2895 # v2.6.1
+        with:
+          egress-policy: audit
+
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - uses: ./.github/actions/install-deps
       - run: make vulncheck
@@ -32,6 +40,11 @@ jobs:
       actions: read # github/codeql-action/init@v2
       security-events: write # github/codeql-action/init@v2
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@eb238b55efaa70779f274895e782ed17c84f2895 # v2.6.1
+        with:
+          egress-policy: audit
+
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - uses: github/codeql-action/init@df32e399139a3050671466d7d9b3cbacc1cfd034 # v2.22.8
         with:

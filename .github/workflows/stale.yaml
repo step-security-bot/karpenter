@@ -3,6 +3,9 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '0 12 * * *'
+permissions:
+  contents: read
+
 jobs:
   StaleBot:
     runs-on: ubuntu-latest
@@ -13,6 +16,11 @@ jobs:
     if: github.repository == 'kubernetes-sigs/karpenter'
     name: Stale issue bot
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@eb238b55efaa70779f274895e782ed17c84f2895 # v2.6.1
+        with:
+          egress-policy: audit
+
       - uses: actions/stale@28ca1036281a5e5922ead5184a1bbf96e5fc984e # v9.0.0
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
